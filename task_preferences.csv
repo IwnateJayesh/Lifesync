@@ -1,0 +1,10 @@
+task,best_time,alternate_time_1,alternate_time_2,avoid_time,duration,reason
+study,20:30-22:00,06:00-07:00,18:00-19:00,14:00-16:00,90,Quiet and focused time at night
+exercise,06:00-07:00,18:00-19:00,07:00-08:00,13:00-15:00,45,Better energy and metabolism boost
+fuel,07:00-08:00,21:00-22:00,06:00-07:00,09:00-11:00,20,Less crowd at fuel stations
+shopping,18:00-20:00,11:00-12:00,20:00-21:00,14:00-16:00,60,Convenient time with open stores
+eat,13:00-14:00,20:00-21:00,08:00-09:00,16:00-17:00,30,Regular healthy eating schedule
+travel,07:00-08:00,18:00-19:00,21:00-22:00,09:00-11:00,60,Less rush hour traffic
+rest,15:00-16:00,21:30-22:30,13:30-14:30,10:00-12:00,45,Post-work recovery time
+personal work,19:00-20:00,06:30-07:30,21:00-22:00,12:00-15:00,60,Flexible focused personal slot
+sleep,22:30-06:00,22:00-05:30,23:00-06:30,01:00-04:00,420,Healthy sleep for recovery

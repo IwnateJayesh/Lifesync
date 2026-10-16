@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In – Lifysyn</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .signin-wrapper {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: calc(100vh - 64px);
+    }
+
+    /* Left stats panel */
+    .signin-left {
+      background: linear-gradient(155deg, #0d1930, #050d1a);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+
+    .signin-left::after {
+      content: '';
+      position: absolute;
+      bottom: -100px; right: -100px;
+      width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(79,142,247,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      width: 100%;
+      max-width: 320px;
+      margin: 2rem 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    .stat-card {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.2rem 1rem;
+      text-align: center;
+      animation: scaleIn 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    .stat-card:nth-child(1) { animation-delay: 0.1s; }
+    .stat-card:nth-child(2) { animation-delay: 0.2s; border-color: rgba(15,244,198,0.2); }
+    .stat-card:nth-child(3) { animation-delay: 0.3s; }
+    .stat-card:nth-child(4) { animation-delay: 0.4s; border-color: rgba(79,142,247,0.2); }
+
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .stat-value {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+    }
+
+    .stat-label {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-top: 0.2rem;
+    }
+
+    /* Clock widget */
+    .clock-widget {
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    #live-clock {
+      font-family: var(--font-heading);
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #live-date {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+
+    .clock-subtext {
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 0.8rem;
+    }
+
+    /* Right form */
+    .signin-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+    }
+
+    .signin-form-box {
+      width: 100%;
+      max-width: 400px;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .auth-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
+
+    .auth-sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .auth-footer-text {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .auth-footer-text a {
+      color: var(--accent-teal);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .demo-hint {
+      background: rgba(15,244,198,0.06);
+      border: 1px dashed rgba(15,244,198,0.25);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+
+    .demo-hint span { color: var(--accent-teal); font-weight: 600; }
+
+    .password-toggle { position: relative; }
+    .password-toggle .form-input { padding-right: 3rem; }
+    .toggle-btn {
+      position: absolute; right: 1rem; top: 50%;
+      transform: translateY(-50%); background: none; border: none;
+      cursor: pointer; color: var(--text-muted); font-size: 1rem;
+      transition: color var(--transition);
+    }
+    .toggle-btn:hover { color: var(--text-primary); }
+
+    @media (max-width: 768px) {
+      .signin-wrapper { grid-template-columns: 1fr; }
+      .signin-left { display: none; }
+      .signin-right { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="gradient-bg"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Lifysyn</a>
+    <ul class="nav-links">
+      <li><a href="signup.html">New here? Sign Up</a></li>
+    </ul>
+  </nav>
+
+  <div class="signin-wrapper">
+    <!-- ===== LEFT PANEL ===== -->
+    <div class="signin-left">
+      <div class="clock-widget">
+        <div id="live-clock">00:00:00</div>
+        <div id="live-date">Loading...</div>
+        <div class="clock-subtext">Plan this day before it plans you.</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-teal);">9</div>
+          <div class="stat-label">Task Types</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-blue);">3</div>
+          <div class="stat-label">Slot Options</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-amber);">30m</div>
+          <div class="stat-label">Buffer Time</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" style="color:var(--accent-green);">0</div>
+          <div class="stat-label">Conflicts</div>
+        </div>
+      </div>
+
+      <p style="color:var(--text-muted);font-size:0.82rem;text-align:center;position:relative;z-index:1;">
+        Your schedule, conflict-free — every single day.
+      </p>
+    </div>
+
+    <!-- ===== RIGHT FORM PANEL ===== -->
+    <div class="signin-right">
+      <div class="signin-form-box">
+        <h1 class="auth-title">Welcome back 👋</h1>
+        <p class="auth-sub">Sign in to see your personalised plan.</p>
+
+        <div class="demo-hint">
+          Demo account: <span>demo@lifysyn.com</span> / <span>demo123</span>
+        </div>
+
+        <div id="alertBox" class="alert"></div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" class="form-input" placeholder="your@email.com" value="demo@lifysyn.com" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="password-toggle">
+            <input type="password" id="password" class="form-input" placeholder="Your password" value="demo123" />
+            <button type="button" class="toggle-btn" onclick="togglePass()">👁</button>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-full" onclick="handleSignin()" style="margin-top:0.5rem;">
+          Sign In & Plan My Day →
+        </button>
+
+        <p class="auth-footer-text">
+          Don't have an account? <a href="signup.html">Create one free</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Live clock
+    function updateClock() {
+      const now = new Date();
+      const time = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      const date = now.toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById('live-clock').textContent = time;
+      document.getElementById('live-date').textContent = date;
+    }
+    updateClock();
+    setInterval(updateClock, 1000);
+
+    function togglePass() {
+      const input = document.getElementById('password');
+      const btn = document.querySelector('.toggle-btn');
+      if (input.type === 'password') { input.type = 'text'; btn.textContent = '🙈'; }
+      else { input.type = 'password'; btn.textContent = '👁'; }
+    }
+
+    function showAlert(msg, type) {
+      const box = document.getElementById('alertBox');
+      box.className = `alert alert-${type} show`;
+      box.textContent = msg;
+    }
+
+    function handleSignin() {
+      const email = document.getElementById('email').value.trim();
+      const pass  = document.getElementById('password').value;
+
+      if (!email || !pass) return showAlert('Please fill in both fields.', 'error');
+
+      // Check users list from localStorage
+      let users = JSON.parse(localStorage.getItem('lifysyn_users') || '[]');
+
+      // Also add the demo user if not already present
+      const demoExists = users.find(u => u.email === 'demo@lifysyn.com');
+      if (!demoExists) {
+        users.push({ userId: 1, name: 'Demo User', email: 'demo@lifysyn.com', password: 'demo123' });
+      }
+
+      const found = users.find(u =>
+        u.email.toLowerCase() === email.toLowerCase() && u.password === pass
+      );
+
+      if (!found) {
+        return showAlert('Invalid email or password. Try demo@lifysyn.com / demo123', 'error');
+      }
+
+      // Save session
+      sessionStorage.setItem('lifysyn_user', JSON.stringify(found));
+
+      showAlert(`Welcome back, ${found.name}! Redirecting...`, 'success');
+      setTimeout(() => window.location.href = 'task-selection.html', 1500);
+    }
+
+    // Allow Enter key
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Enter') handleSignin();
+    });
+  </script>
+</body>
+</html>

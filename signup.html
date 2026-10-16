@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign Up – Lifysyn</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+
+    .auth-wrapper {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      min-height: 100vh;
+    }
+
+    /* Left panel – illustration/branding */
+    .auth-left {
+      background: linear-gradient(145deg, #0d1930 0%, #0a1628 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+      border-right: 1px solid var(--border);
+    }
+
+    .auth-left::before {
+      content: '';
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(15,244,198,0.07) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .brand-block { text-align: center; position: relative; z-index: 1; }
+
+    .brand-logo {
+      font-family: var(--font-heading);
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+    }
+
+    .brand-tagline {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      font-weight: 300;
+      margin-bottom: 3rem;
+    }
+
+    /* Animated timeline illustration */
+    .timeline-illustration {
+      width: 100%;
+      max-width: 320px;
+    }
+
+    .tl-item {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.1rem;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      margin-bottom: 0.75rem;
+      transition: all var(--transition);
+      animation: slideInLeft 0.5s ease forwards;
+      opacity: 0;
+    }
+
+    .tl-item:nth-child(1) { animation-delay: 0.1s; }
+    .tl-item:nth-child(2) { animation-delay: 0.25s; border-color: rgba(15,244,198,0.3); background: rgba(15,244,198,0.05); }
+    .tl-item:nth-child(3) { animation-delay: 0.4s; }
+    .tl-item:nth-child(4) { animation-delay: 0.55s; }
+
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-20px); }
+      to   { opacity: 1; transform: translateX(0); }
+    }
+
+    .tl-icon { font-size: 1.4rem; min-width: 28px; }
+
+    .tl-text { flex: 1; }
+    .tl-label { font-size: 0.82rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+    .tl-time  { font-family: var(--font-heading); font-size: 1rem; font-weight: 700; color: var(--text-primary); }
+    .tl-time.teal { color: var(--accent-teal); }
+
+    .tl-badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 99px;
+      font-weight: 700;
+    }
+
+    /* Right panel – form */
+    .auth-right {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem;
+    }
+
+    .auth-form-box {
+      width: 100%;
+      max-width: 420px;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    .auth-title {
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
+
+    .auth-sub {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 2rem;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin: 1.5rem 0;
+      color: var(--text-muted);
+      font-size: 0.82rem;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .auth-footer-text {
+      text-align: center;
+      margin-top: 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    .auth-footer-text a {
+      color: var(--accent-teal);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .password-toggle {
+      position: relative;
+    }
+
+    .password-toggle .form-input {
+      padding-right: 3rem;
+    }
+
+    .toggle-btn {
+      position: absolute;
+      right: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-size: 1rem;
+      transition: color var(--transition);
+    }
+
+    .toggle-btn:hover { color: var(--text-primary); }
+
+    /* Strength meter */
+    .strength-bar {
+      display: flex;
+      gap: 4px;
+      margin-top: 6px;
+    }
+
+    .strength-seg {
+      height: 4px;
+      flex: 1;
+      border-radius: 99px;
+      background: rgba(255,255,255,0.08);
+      transition: background var(--transition);
+    }
+
+    @media (max-width: 768px) {
+      .auth-wrapper { grid-template-columns: 1fr; }
+      .auth-left { display: none; }
+      .auth-right { padding: 2rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="gradient-bg"></div>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Lifysyn</a>
+    <ul class="nav-links">
+      <li><a href="signin.html">Already have an account? Sign In</a></li>
+    </ul>
+  </nav>
+
+  <div class="auth-wrapper">
+    <!-- ===== LEFT BRANDING PANEL ===== -->
+    <div class="auth-left">
+      <div class="brand-block">
+        <div class="brand-logo">Lifysyn</div>
+        <div class="brand-tagline">Your Personalized Task Planner</div>
+
+        <!-- Illustration: sample plan preview -->
+        <div class="timeline-illustration">
+          <div class="tl-item">
+            <div class="tl-icon">🏃</div>
+            <div class="tl-text">
+              <div class="tl-label">Exercise</div>
+              <div class="tl-time">06:00 – 06:45</div>
+            </div>
+            <span class="tl-badge badge badge-best">Best</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-icon">📚</div>
+            <div class="tl-text">
+              <div class="tl-label">Study</div>
+              <div class="tl-time teal">20:30 – 22:00</div>
+            </div>
+            <span class="tl-badge badge badge-best">Best</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-icon">🍽️</div>
+            <div class="tl-text">
+              <div class="tl-label">Eat</div>
+              <div class="tl-time">13:00 – 13:30</div>
+            </div>
+            <span class="tl-badge badge badge-best">Best</span>
+          </div>
+          <div class="tl-item">
+            <div class="tl-icon">🌙</div>
+            <div class="tl-text">
+              <div class="tl-label">Sleep</div>
+              <div class="tl-time">22:30 – 06:00</div>
+            </div>
+            <span class="tl-badge badge badge-best">Best</span>
+          </div>
+        </div>
+
+        <p style="margin-top:1.5rem;color:var(--text-muted);font-size:0.85rem;">
+          ✦ Smart planning · Zero clashes · Perfect timing
+        </p>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT FORM PANEL ===== -->
+    <div class="auth-right">
+      <div class="auth-form-box">
+        <h1 class="auth-title">Create account</h1>
+        <p class="auth-sub">Start planning your day smarter — it's free.</p>
+
+        <div id="alertBox" class="alert"></div>
+
+        <div class="form-group">
+          <label class="form-label" for="name">Full Name</label>
+          <input type="text" id="name" class="form-input" placeholder="Arjun Sharma" autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="email">Email Address</label>
+          <input type="email" id="email" class="form-input" placeholder="arjun@email.com" autocomplete="off" />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="password-toggle">
+            <input type="password" id="password" class="form-input" placeholder="Min. 6 characters" oninput="checkStrength(this.value)" />
+            <button type="button" class="toggle-btn" onclick="togglePass('password', this)">👁</button>
+          </div>
+          <div class="strength-bar" id="strengthBar">
+            <div class="strength-seg" id="s1"></div>
+            <div class="strength-seg" id="s2"></div>
+            <div class="strength-seg" id="s3"></div>
+            <div class="strength-seg" id="s4"></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="confirmPass">Confirm Password</label>
+          <div class="password-toggle">
+            <input type="password" id="confirmPass" class="form-input" placeholder="Repeat password" />
+            <button type="button" class="toggle-btn" onclick="togglePass('confirmPass', this)">👁</button>
+          </div>
+        </div>
+
+        <div class="auth-divider">Creating account saves your data locally for demo</div>
+
+        <button class="btn btn-primary btn-full" onclick="handleSignup()">
+          Create My Account →
+        </button>
+
+        <p class="auth-footer-text">
+          Already have an account? <a href="signin.html">Sign In</a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function togglePass(id, btn) {
+      const input = document.getElementById(id);
+      if (input.type === 'password') {
+        input.type = 'text';
+        btn.textContent = '🙈';
+      } else {
+        input.type = 'password';
+        btn.textContent = '👁';
+      }
+    }
+
+    function checkStrength(val) {
+      const segs = [document.getElementById('s1'), document.getElementById('s2'),
+                    document.getElementById('s3'), document.getElementById('s4')];
+      const reset = () => segs.forEach(s => s.style.background = 'rgba(255,255,255,0.08)');
+      reset();
+
+      let score = 0;
+      if (val.length >= 6)  score++;
+      if (val.length >= 10) score++;
+      if (/[A-Z]/.test(val) || /[0-9]/.test(val)) score++;
+      if (/[!@#$%^&*]/.test(val)) score++;
+
+      const colors = ['#f87171', '#f59e0b', '#0ff4c6', '#22d3a0'];
+      for (let i = 0; i < score; i++) {
+        segs[i].style.background = colors[score - 1];
+      }
+    }
+
+    function showAlert(msg, type) {
+      const box = document.getElementById('alertBox');
+      box.className = `alert alert-${type} show`;
+      box.textContent = msg;
+    }
+
+    function handleSignup() {
+      const name  = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const pass  = document.getElementById('password').value;
+      const conf  = document.getElementById('confirmPass').value;
+
+      if (!name)  return showAlert('Please enter your full name.', 'error');
+      if (!email || !email.includes('@')) return showAlert('Please enter a valid email.', 'error');
+      if (pass.length < 6) return showAlert('Password must be at least 6 characters.', 'error');
+      if (pass !== conf)   return showAlert('Passwords do not match.', 'error');
+
+      // Get existing users
+      let users = JSON.parse(localStorage.getItem('lifysyn_users') || '[]');
+
+      // Check duplicate email
+      if (users.find(u => u.email.toLowerCase() === email.toLowerCase())) {
+        return showAlert('This email is already registered. Please sign in.', 'error');
+      }
+
+      // Add new user
+      const newUser = {
+        userId: users.length + 1,
+        name,
+        email,
+        password: pass
+      };
+      users.push(newUser);
+      localStorage.setItem('lifysyn_users', JSON.stringify(users));
+
+      // Log the CSV equivalent to console (for Java backend reference)
+      console.log('CSV Row to save:', `${newUser.userId},${newUser.name},${newUser.email},${newUser.password}`);
+
+      showAlert('Account created! Redirecting to sign in...', 'success');
+      setTimeout(() => window.location.href = 'signin.html', 1800);
+    }
+  </script>
+</body>
+</html>

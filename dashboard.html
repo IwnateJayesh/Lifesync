@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Plan – Lifysyn Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    /* ===== DASHBOARD LAYOUT ===== */
+    .dashboard {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 2rem 5rem;
+    }
+
+    /* ===== TOP BAR ===== */
+    .top-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 2rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .top-bar-left h1 {
+      font-family: var(--font-heading);
+      font-size: 1.9rem;
+      font-weight: 800;
+    }
+
+    .top-bar-left p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.2rem;
+    }
+
+    .top-bar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .user-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 1rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-size: 0.88rem;
+    }
+
+    .user-chip .av {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 800; font-size: 0.78rem; color: var(--bg-dark);
+    }
+
+    /* ===== STATS ROW ===== */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-tile {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.2rem 1.4rem;
+      transition: all var(--transition);
+    }
+
+    .stat-tile:hover {
+      transform: translateY(-3px);
+      border-color: rgba(79,142,247,0.25);
+    }
+
+    .stat-tile .icon { font-size: 1.4rem; margin-bottom: 0.5rem; }
+    .stat-tile .val {
+      font-family: var(--font-heading);
+      font-size: 1.7rem;
+      font-weight: 800;
+    }
+    .stat-tile .lbl { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.15rem; }
+
+    /* ===== MAIN GRID ===== */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    /* ===== BEST SLOT HERO CARD ===== */
+    .best-slot-card {
+      background: linear-gradient(135deg, #0d2a24 0%, #0a1a2e 100%);
+      border: 1.5px solid rgba(15,244,198,0.35);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      grid-column: 1 / -1;
+    }
+
+    .best-slot-card::before {
+      content: '';
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 220px; height: 220px;
+      background: radial-gradient(circle, rgba(15,244,198,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .best-slot-card::after {
+      content: 'BEST SLOT FOR TODAY';
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      color: var(--accent-teal);
+      opacity: 0.7;
+    }
+
+    .best-slot-content {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .best-slot-icon-wrap {
+      width: 70px; height: 70px;
+      border-radius: var(--radius-md);
+      background: rgba(15,244,198,0.12);
+      border: 1px solid rgba(15,244,198,0.25);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem;
+      flex-shrink: 0;
+    }
+
+    .best-slot-info {}
+    .best-slot-task {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent-teal);
+      font-weight: 700;
+      margin-bottom: 0.3rem;
+    }
+
+    .best-slot-time {
+      font-family: var(--font-heading);
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      line-height: 1;
+    }
+
+    .best-slot-reason {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.4rem;
+    }
+
+    .best-slot-meta {
+      margin-left: auto;
+      text-align: right;
+    }
+
+    .best-slot-duration {
+      font-family: var(--font-heading);
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--accent-teal);
+    }
+
+    .best-slot-dur-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ===== CHART CARD ===== */
+    .chart-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+    }
+
+    .chart-card-title {
+      font-family: var(--font-heading);
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .chart-wrap {
+      position: relative;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .chart-legend {
+      margin-top: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .legend-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ===== TASK CARDS SECTION ===== */
+    .tasks-section-title {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .tasks-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+      gap: 1.2rem;
+    }
+
+    .task-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.4rem;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .task-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(79,142,247,0.3);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .task-card.no-slot {
+      border-color: rgba(248,113,113,0.2);
+      background: rgba(248,113,113,0.03);
+    }
+
+    .task-card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .task-card-icon {
+      width: 42px; height: 42px;
+      border-radius: var(--radius-sm);
+      background: rgba(79,142,247,0.08);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+    }
+
+    .task-card-name {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      text-transform: capitalize;
+    }
+
+    .task-card-duration {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .task-final-banner {
+      background: rgba(15,244,198,0.08);
+      border: 1px solid rgba(15,244,198,0.2);
+      border-radius: var(--radius-md);
+      padding: 0.7rem 0.9rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .task-final-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      color: var(--accent-teal);
+      font-weight: 700;
+    }
+
+    .task-final-time {
+      font-family: var(--font-heading);
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent-teal);
+    }
+
+    .task-final-banner.no-slot {
+      background: rgba(248,113,113,0.06);
+      border-color: rgba(248,113,113,0.2);
+    }
+
+    .task-final-banner.no-slot .task-final-label,
+    .task-final-banner.no-slot .task-final-time {
+      color: var(--accent-red);
+    }
+
+    /* Time rows */
+    .time-rows { display: flex; flex-direction: column; gap: 0.5rem; }
+
+    .time-row-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.55rem 0.7rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+      background: rgba(255,255,255,0.02);
+    }
+
+    .time-row-item .tr-label { color: var(--text-muted); font-size: 0.78rem; }
+    .time-row-item .tr-time  { font-weight: 600; font-size: 0.88rem; }
+
+    .time-row-item.best-row  { background: rgba(34,211,160,0.06); }
+    .time-row-item.alt-row   { background: rgba(245,158,11,0.05); }
+    .time-row-item.avoid-row { background: rgba(248,113,113,0.05); }
+
+    .time-row-item.best-row .tr-time  { color: var(--accent-green); }
+    .time-row-item.alt-row .tr-time   { color: var(--accent-amber); }
+    .time-row-item.avoid-row .tr-time { color: var(--accent-red); }
+
+    .task-reason {
+      margin-top: 0.75rem;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-style: italic;
+      padding-top: 0.7rem;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ===== SCHEDULE BAR ===== */
+    .schedule-bar-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .schedule-bar {
+      display: flex;
+      height: 40px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      margin-top: 1rem;
+      background: rgba(255,255,255,0.04);
+    }
+
+    .bar-occupied {
+      background: rgba(132,148,176,0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: #fff; font-weight: 600;
+      min-width: 30px;
+    }
+
+    .bar-free {
+      background: rgba(15,244,198,0.15);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; color: var(--accent-teal); font-weight: 600;
+    }
+
+    .bar-buffer {
+      background: rgba(79,142,247,0.2);
+      min-width: 6px;
+    }
+
+    .bar-labels {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* ===== PRINT / EXPORT BUTTON ===== */
+    .export-row {
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 768px) {
+      .main-grid { grid-template-columns: 1fr; }
+      .best-slot-card::after { display: none; }
+      .best-slot-time { font-size: 2rem; }
+      .best-slot-meta { margin-left: 0; }
+      .tasks-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="gradient-bg"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Lifysyn</a>
+    <ul class="nav-links">
+      <li><a href="task-selection.html" class="btn btn-outline" style="padding:0.4rem 1rem;font-size:0.85rem;">← Edit Plan</a></li>
+      <li id="userChipNav"></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard" id="dashboardContent">
+    <!-- Injected by JS -->
+    <div style="text-align:center;padding:5rem 0;color:var(--text-muted);">
+      <div class="spinner" style="margin:0 auto 1rem;"></div>
+      Loading your plan...
+    </div>
+  </div>
+
+  <script src="dashboard.js"></script>
+</body>
+</html>

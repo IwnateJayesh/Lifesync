@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lifysyn – Your Personalized Task Planner</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ===== LANDING PAGE SPECIFIC ===== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 2rem;
+      position: relative;
+    }
+
+    /* Large decorative background orbit rings */
+    .orbit-ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 1px solid rgba(15,244,198,0.08);
+      pointer-events: none;
+    }
+    .orbit-1 { width: 500px; height: 500px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: rotateRing 30s linear infinite; }
+    .orbit-2 { width: 750px; height: 750px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: rotateRing 45s linear infinite reverse; border-color: rgba(79,142,247,0.06); }
+    .orbit-3 { width: 1000px; height: 1000px; top: 50%; left: 50%; transform: translate(-50%,-50%); animation: rotateRing 60s linear infinite; border-color: rgba(15,244,198,0.04); }
+
+    @keyframes rotateRing {
+      to { transform: translate(-50%,-50%) rotate(360deg); }
+    }
+
+    /* Floating glowing dots on rings */
+    .orbit-dot {
+      position: absolute;
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: var(--accent-teal);
+      box-shadow: 0 0 12px var(--accent-teal);
+      top: 0; left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .hero-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 1rem;
+      background: rgba(15,244,198,0.08);
+      border: 1px solid rgba(15,244,198,0.2);
+      border-radius: 99px;
+      font-size: 0.82rem;
+      color: var(--accent-teal);
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      margin-bottom: 1.5rem;
+      animation: fadeIn 0.5s ease forwards;
+    }
+
+    .hero-pill span.dot {
+      width: 6px; height: 6px;
+      background: var(--accent-teal);
+      border-radius: 50%;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.7); }
+    }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(3rem, 8vw, 6rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -2px;
+      margin-bottom: 1.2rem;
+      animation: fadeIn 0.6s 0.1s ease both;
+    }
+
+    .hero-subtitle {
+      font-size: clamp(1.05rem, 2.5vw, 1.3rem);
+      color: var(--text-muted);
+      max-width: 560px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+      font-weight: 300;
+      animation: fadeIn 0.6s 0.2s ease both;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeIn 0.6s 0.3s ease both;
+    }
+
+    /* Feature highlights below hero */
+    .features-strip {
+      display: flex;
+      gap: 1.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      padding: 2.5rem 2rem;
+      border-top: 1px solid var(--border);
+      animation: fadeIn 0.6s 0.5s ease both;
+    }
+
+    .feat-chip {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.88rem;
+      color: var(--text-muted);
+    }
+
+    .feat-chip .icon { font-size: 1.1rem; }
+
+    /* ===== HOW IT WORKS ===== */
+    .how-it-works {
+      padding: 5rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .step-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      position: relative;
+      transition: all var(--transition);
+    }
+
+    .step-card:hover {
+      border-color: rgba(15,244,198,0.3);
+      transform: translateY(-5px);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+    }
+
+    .step-number {
+      font-family: var(--font-heading);
+      font-size: 3.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, rgba(15,244,198,0.15), rgba(79,142,247,0.15));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1;
+      margin-bottom: 0.8rem;
+    }
+
+    .step-icon {
+      font-size: 2.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .step-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ===== TASKS PREVIEW ===== */
+    .tasks-preview {
+      padding: 4rem 2rem;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .tasks-preview-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      justify-content: center;
+    }
+
+    .task-pill {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.6rem 1.1rem;
+      background: var(--bg-card2);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      transition: all var(--transition);
+    }
+
+    .task-pill:hover {
+      border-color: var(--accent-teal);
+      color: var(--accent-teal);
+      background: rgba(15,244,198,0.06);
+      transform: translateY(-2px);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+
+    footer .logo-text {
+      font-family: var(--font-heading);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent-teal), var(--accent-blue));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* ===== SCREENSHOT MOCKUP ===== */
+    .mockup-section {
+      padding: 3rem 2rem;
+      max-width: 900px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .mockup-window {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.5), var(--glow-blue);
+      position: relative;
+    }
+
+    .mockup-bar {
+      background: var(--bg-card2);
+      padding: 0.7rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dot-red, .dot-yellow, .dot-green {
+      width: 11px; height: 11px; border-radius: 50%;
+    }
+    .dot-red    { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green  { background: #28c840; }
+
+    .mockup-content {
+      padding: 1.5rem;
+    }
+
+    .mock-row {
+      display: grid;
+      grid-template-columns: 1fr 2fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .mock-card {
+      background: var(--bg-card2);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      border: 1px solid var(--border);
+    }
+
+    .mock-bar {
+      height: 8px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 99px;
+      margin: 0.4rem 0;
+    }
+
+    .mock-bar.teal { background: rgba(15,244,198,0.3); width: 60%; }
+    .mock-bar.blue { background: rgba(79,142,247,0.3); width: 80%; }
+    .mock-bar.short { width: 40%; }
+    .mock-bar.full { width: 100%; }
+
+    .mock-donut {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      background: conic-gradient(
+        var(--accent-green) 0% 35%,
+        var(--accent-amber) 35% 60%,
+        var(--accent-red)   60% 75%,
+        #334155             75% 100%
+      );
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .mock-donut::after {
+      content: '';
+      position: absolute;
+      inset: 22px;
+      background: var(--bg-card2);
+      border-radius: 50%;
+    }
+
+    @media (max-width: 600px) {
+      .mock-row { grid-template-columns: 1fr; }
+      .orbit-1, .orbit-2, .orbit-3 { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="gradient-bg"></div>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav>
+    <a href="index.html" class="nav-logo">Lifysyn</a>
+    <ul class="nav-links">
+      <li><a href="#how">How it Works</a></li>
+      <li><a href="#tasks">Tasks</a></li>
+      <li><a href="signin.html" class="btn btn-outline" style="padding:0.45rem 1.1rem;font-size:0.88rem;">Sign In</a></li>
+      <li><a href="signup.html" class="btn btn-primary" style="padding:0.45rem 1.1rem;font-size:0.88rem;">Get Started</a></li>
+    </ul>
+  </nav>
+
+  <!-- ===== HERO SECTION ===== -->
+  <section class="hero">
+    <!-- Decorative orbit rings -->
+    <div class="orbit-ring orbit-1"><div class="orbit-dot"></div></div>
+    <div class="orbit-ring orbit-2"></div>
+    <div class="orbit-ring orbit-3"></div>
+
+    <div class="hero-pill">
+      <span class="dot"></span>
+      AI-POWERED DAILY PLANNER
+    </div>
+
+    <h1 class="hero-title">
+      Plan your day<br />
+      <span class="gradient-text">the smart way.</span>
+    </h1>
+
+    <p class="hero-subtitle">
+      Lifysyn intelligently fits your tasks around your schedule — recommending the best time slots, avoiding conflicts, and maximising your productivity.
+    </p>
+
+    <div class="hero-cta">
+      <a href="signup.html" class="btn btn-primary" style="padding: 0.9rem 2.2rem; font-size: 1rem;">
+        Start Planning Free →
+      </a>
+      <a href="signin.html" class="btn btn-outline" style="padding: 0.9rem 2.2rem; font-size: 1rem;">
+        Sign In
+      </a>
+    </div>
+
+    <!-- Feature chips -->
+    <div class="features-strip">
+      <div class="feat-chip"><span class="icon">⚡</span> Instant recommendations</div>
+      <div class="feat-chip"><span class="icon">🛡️</span> Buffer time included</div>
+      <div class="feat-chip"><span class="icon">📊</span> Visual daily chart</div>
+      <div class="feat-chip"><span class="icon">🔒</span> Private & offline</div>
+      <div class="feat-chip"><span class="icon">📅</span> Clash detection</div>
+    </div>
+  </section>
+
+  <!-- ===== MOCKUP PREVIEW ===== -->
+  <section class="mockup-section">
+    <div class="mockup-window fade-in">
+      <div class="mockup-bar">
+        <div class="dot-red"></div>
+        <div class="dot-yellow"></div>
+        <div class="dot-green"></div>
+        <span style="font-size:0.75rem;color:var(--text-muted);margin-left:0.5rem;">Lifysyn Dashboard</span>
+      </div>
+      <div class="mockup-content">
+        <div class="mock-row">
+          <div class="mock-card">
+            <div style="font-size:1.5rem;margin-bottom:0.5rem;">📚</div>
+            <div class="mock-bar teal"></div>
+            <div class="mock-bar short"></div>
+            <div class="mock-bar full"></div>
+          </div>
+          <div class="mock-card" style="border-color: rgba(15,244,198,0.3);">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem;">
+              <div style="font-size:0.8rem;color:var(--accent-teal);font-weight:700;">BEST SLOT TODAY</div>
+              <div style="font-size:0.75rem;color:var(--text-muted);">📌 Study</div>
+            </div>
+            <div style="font-family:var(--font-heading);font-size:1.6rem;font-weight:800;color:var(--accent-teal);">20:30 – 22:00</div>
+            <div class="mock-bar blue"></div>
+            <div class="mock-bar short"></div>
+          </div>
+          <div class="mock-card" style="display:flex;align-items:center;justify-content:center;flex-direction:column;">
+            <div class="mock-donut"></div>
+            <div class="mock-bar short" style="margin-top:0.6rem;"></div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;">
+          <div class="mock-card" style="flex:1"><div class="mock-bar teal"></div><div class="mock-bar short"></div></div>
+          <div class="mock-card" style="flex:1"><div class="mock-bar blue"></div><div class="mock-bar short"></div></div>
+          <div class="mock-card" style="flex:1"><div class="mock-bar" style="background:rgba(245,158,11,0.3);width:70%;"></div><div class="mock-bar short"></div></div>
+        </div>
+      </div>
+    </div>
+    <p style="color:var(--text-muted);font-size:0.85rem;margin-top:1rem;">Your personalised daily dashboard — always updated.</p>
+  </section>
+
+  <!-- ===== HOW IT WORKS ===== -->
+  <section class="how-it-works" id="how">
+    <p class="hero-pill" style="margin: 0 auto 1rem;">HOW IT WORKS</p>
+    <h2 class="section-title">Four steps to a<br /><span class="gradient-text">perfect day.</span></h2>
+
+    <div class="steps-grid">
+      <div class="step-card fade-in fade-in-delay-1">
+        <div class="step-icon">🖊️</div>
+        <div class="step-number">01</div>
+        <div class="step-title">Create your account</div>
+       <div class="step-desc">Sign up in seconds. Your details stay private — stored locally for demo use.</div>
+      </div>
+      <div class="step-card fade-in fade-in-delay-2">
+        <div class="step-icon">🏢</div>
+        <div class="step-number">02</div>
+        <div class="step-title">Set your occupied hours</div>
+        <div class="step-desc">Tell us your college or office timings. We automatically add 30-minute buffers around them.</div>
+      </div>
+      <div class="step-card fade-in fade-in-delay-3">
+        <div class="step-icon">✅</div>
+        <div class="step-number">03</div>
+        <div class="step-title">Choose your tasks</div>
+        <div class="step-desc">Pick from Study, Exercise, Eat, Travel, Sleep and more. Choose as many as you need.</div>
+      </div>
+      <div class="step-card fade-in fade-in-delay-4">
+        <div class="step-icon">📊</div>
+        <div class="step-number">04</div>
+        <div class="step-title">Get your plan</div>
+        <div class="step-desc">Receive best time, alternate times, and avoid times for each task — with a visual daily chart.</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== TASKS PREVIEW ===== -->
+  <section class="tasks-preview" id="tasks">
+    <div style="text-align:center;">
+      <p class="hero-pill" style="margin: 0 auto 1rem;">SUPPORTED TASKS</p>
+      <h2 class="section-title">Everything you <span class="gradient-text">need to plan.</span></h2>
+      <p style="color:var(--text-muted);margin-top:0.5rem;margin-bottom:2rem;">Nine categories, each with data-backed time recommendations.</p>
+    </div>
+    <div class="tasks-preview-grid">
+      <div class="task-pill">📚 Study</div>
+      <div class="task-pill">🏃 Exercise</div>
+      <div class="task-pill">🍽️ Eat</div>
+      <div class="task-pill">🚗 Travel</div>
+      <div class="task-pill">⛽ Fuel</div>
+      <div class="task-pill">🛒 Shopping</div>
+      <div class="task-pill">😴 Rest</div>
+      <div class="task-pill">💼 Personal Work</div>
+      <div class="task-pill">🌙 Sleep</div>
+    </div>
+  </section>
+
+  <!-- ===== FINAL CTA ===== -->
+  <section style="text-align:center; padding: 4rem 2rem; border-top: 1px solid var(--border);">
+    <h2 class="section-title">Ready to own your day?</h2>
+    <p style="color:var(--text-muted);margin:1rem 0 2rem;font-size:1.05rem;">Join Lifysyn and stop guessing when to do what.</p>
+    <a href="signup.html" class="btn btn-primary" style="padding:1rem 2.5rem;font-size:1.05rem;">
+      Create Free Account →
+    </a>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p><span class="logo-text">Lifysyn</span> · Your Personalized Task Planner · Minor Project</p>
+    <p style="margin-top:0.4rem;">Built with ❤️ using HTML, CSS, JavaScript &amp; Java</p>
+  </footer>
+</body>
+</html>
